@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="insert_create_treatment_plan_table" author="Voloshyn">
+        <sql>
+            INSERT INTO TREATMENT_PLAN (action_type, patient_id, start_time, end_time, recurrence, status)
+            VALUES ('TREATMENT_ACTION_A', 'testPatientId', now(), '2024-04-01 10:12:12', '0 0 0 * * *', 'NEW');
+        </sql>
+        <rollback>
+            delete from TREATMENT_PLAN;
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
+
