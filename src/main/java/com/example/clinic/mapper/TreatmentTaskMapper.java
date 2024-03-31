@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 
 public class TreatmentTaskMapper {
 
-    public static TreatmentTask mapToTreatmentTask(TreatmentPlan plan, LocalDateTime startTime) {
+    public static TreatmentTask mapToTreatmentTask(TreatmentPlan plan, LocalDateTime startTime, TaskStatus taskStatus) {
 
         return TreatmentTask
                 .builder()
                 .patientId(plan.getPatientId())
-                .status(TaskStatus.ACTIVE)
+                .status(taskStatus)
                 .actionType(plan.getActionType())
                 .startTime(startTime)
                 .build();

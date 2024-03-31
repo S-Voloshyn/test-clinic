@@ -11,4 +11,5 @@ public enum TaskStatus {
     ACTIVE("Active"), COMPLETED("Completed");
 
     final String name;
+
 }

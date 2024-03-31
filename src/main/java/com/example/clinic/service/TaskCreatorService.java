@@ -2,14 +2,15 @@ package com.example.clinic.service;
 
 
 import com.example.clinic.entity.PlanStatus;
+import com.example.clinic.entity.TaskStatus;
 import com.example.clinic.entity.TreatmentPlan;
 import com.example.clinic.mapper.TreatmentTaskMapper;
 import com.example.clinic.repository.TreatmentPlanRepository;
 import com.example.clinic.repository.TreatmentTaskRepository;
 import com.example.clinic.utils.CronExpressionParserUtil;
+import com.example.clinic.utils.TransactionHelper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 
 import java.util.stream.Collectors;
 
@@ -21,18 +22,23 @@ public class TaskCreatorService {
 
     private final TreatmentTaskRepository taskRepository;
 
+    private final TransactionHelper transactionHelper;
 
     // TODO should be called by scheduler
 
-    public void createTreatmentTask() {
+    public void processingTreatmentTasks() {
+        // implemented in the easiest way, in real life we should consider for more complex query
         var activeTreatmentPlans =
                 treatmentPlanRepository.getTreatmentPlansByStatus(PlanStatus.NEW);
 
         activeTreatmentPlans
                 .stream()
-                .forEach(this::createAndSaveTask);
+                .forEach(plan ->
+                        transactionHelper.withTransaction(() -> {
+                            createAndSaveTask(plan);
+                            updatePlan(plan, PlanStatus.PROCESSED);
+                        }));
     }
-
 
     private void createAndSaveTask(TreatmentPlan plan) {
 
@@ -40,19 +46,14 @@ public class TaskCreatorService {
 
         var treatmentPlans = recurrenceTimes
                 .stream()
-                .map(t -> TreatmentTaskMapper.mapToTreatmentTask(plan, t))
+                .map(startTime -> TreatmentTaskMapper.mapToTreatmentTask(plan, startTime, TaskStatus.ACTIVE))
                 .collect(Collectors.toList());
 
         taskRepository.saveAll(treatmentPlans);
-
-        savePlan(plan, PlanStatus.PROCESSED);
     }
 
-    private void savePlan(TreatmentPlan plan, PlanStatus planStatus) {
+    private void updatePlan(TreatmentPlan plan, PlanStatus planStatus) {
         plan.setStatus(planStatus);
         treatmentPlanRepository.save(plan);
     }
-
-    ;
-
 }

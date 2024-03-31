@@ -1,7 +1,6 @@
 package com.example.clinic.controller;
 
 
-import com.example.clinic.entity.TreatmentPlan;
 import com.example.clinic.entity.TreatmentTask;
 import com.example.clinic.repository.TreatmentTaskRepository;
 import com.example.clinic.service.TaskCreatorService;
@@ -21,7 +20,7 @@ public class ClinicController {
 
     @GetMapping("/test")
     public List<TreatmentTask> test() {
-        taskCreatorService.createTreatmentTask();
+        taskCreatorService.processingTreatmentTasks();
         return treatmentTaskRepository.findAll();
     }
 }

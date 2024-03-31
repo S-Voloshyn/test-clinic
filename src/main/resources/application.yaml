@@ -6,8 +6,7 @@ spring:
      enabled: true
      changeLog: db/changelog.xml
 
-
-  datasource.url: jdbc:h2:mem:testdb
+  datasource.url: jdbc:h2:mem:testDb
   datasource.driver-class-name: org.h2.Driver
   datasource.username: sa
   datasource.password: password
