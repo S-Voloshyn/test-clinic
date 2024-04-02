@@ -48,13 +48,13 @@ public class TreatmentPlan {
     @Column(name = "end_time")
     public LocalDateTime endTime;
 
+    // initially, this field must have the same value as startTime field
+    @NotNull
+    @Column(name = "last_processing_time")
+    public LocalDateTime lastProcessingTime;
+
     @NotNull
     @Column(name = "recurrence")
     public String recurrence;
-
-    @NotNull
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    public PlanStatus status;
 
 }
